@@ -2,15 +2,15 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "database_development",
+    "database": "gaphql_blog",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "password": "",
+    "database": "conteudo_veiculos",
+    "host": "localhost:3306",
     "dialect": "mysql"
   },
   "production": {

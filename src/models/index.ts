@@ -14,9 +14,13 @@ if (!db) {
 
     const sequelize: Sequelize.Sequelize = new Sequelize(
         config.database,
-        config.ussername,
-        config.password,
-        config
+        config.username,
+        config.password, {
+            host: config.host,
+            dialect: config.dialect,
+            logging: false,
+            operatorsAliases: false
+        }
     );
 
     fs

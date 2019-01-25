@@ -1,4 +1,5 @@
 import {makeExecutableSchema} from 'graphql-tools'
+import {importSchema} from 'graphql-import'
 
 const users: any[] = [
     {
@@ -50,4 +51,4 @@ const resolvers = {
     }
 };
 
-export default makeExecutableSchema({typeDefs, resolvers});
+export default makeExecutableSchema({typeDefs: importSchema('src/graphql/schemas.graphql'), resolvers});

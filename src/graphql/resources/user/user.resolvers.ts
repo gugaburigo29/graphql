@@ -5,6 +5,19 @@ import {Transaction} from "sequelize";
 
 export const userResolvers = {
 
+    User: {
+
+        posts: (user: UserInstance, {first = 10, offset = 0}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
+            return db.Post
+                .find({
+                    where: {author: user.get('id')},
+                    limit: first,
+                    offset: offset
+                })
+        },
+
+    },
+
     Query: {
         users: (parent, {first = 10, offset = 0}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
             return db.User

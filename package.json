@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "gulp": "gulp",
-    "dev": "SET \"NODE_ENV=development\" && nodemon --delay 5 dist/index"
+    "dev": "SET \"NODE_ENV=development\" && SET \"JWT_SECRET=teste\" && nodemon --delay 5 dist/index"
   },
   "keywords": [],
   "author": "Luis Gustavo Burigo Alexandre <gugaba29@gmail.com>",
@@ -21,7 +21,8 @@
     "@types/graphql": "0.11.5",
     "@types/sequelize": "4.0.76",
     "@types/bcryptjs": "2.4.1",
-    "@types/lodash": "4.14.78"
+    "@types/lodash": "4.14.78",
+    "@types/jsonwebtoken": "7.2.3"
   },
   "dependencies": {
     "express": "4.16.2",
@@ -32,6 +33,7 @@
     "mysql2": "1.4.2",
     "bcryptjs": "^2.4.3",
     "graphql-import": "^0.7.1",
-    "lodash": "4.17.4"
+    "lodash": "4.17.4",
+    "jsonwebtoken": "8.1.0"
   }
 }

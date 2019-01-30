@@ -10,6 +10,8 @@ let db = null;
 
 if (!db) {
 
+    console.log(config)
+
     db = {};
 
     const sequelize: Sequelize.Sequelize = new Sequelize(

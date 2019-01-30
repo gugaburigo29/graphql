@@ -2,6 +2,7 @@ import {GraphQLResolveInfo} from "graphql";
 import {DBConnection} from "../../../interfaces/DBConnectionInterface";
 import {PostInstance} from "../../../models/PostModel";
 import {Transaction} from "sequelize";
+import {handleError} from "../../../utils";
 
 export const postResolvers = {
 
@@ -10,6 +11,7 @@ export const postResolvers = {
         author: (post: PostInstance, args, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
             return db.User
                 .findById(post.get('author'))
+                .catch(handleError)
         },
 
         comments: (post: PostInstance, {first = 10, offset = 0}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
@@ -18,7 +20,7 @@ export const postResolvers = {
                     where: {post: post.get('id')},
                     limit: first,
                     offset: offset
-                })
+                }).catch(handleError)
         },
 
     },
@@ -29,16 +31,17 @@ export const postResolvers = {
                 .findAll({
                     limit: first,
                     offset: offset
-                })
+                }).catch(handleError)
         },
 
         post: (parent, {id}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
+            id = parseInt(id)
             return db.Post
                 .findById(id)
                 .then((post: PostInstance) => {
                     if (!post) throw new Error(`Post whit id ${id} not found.`)
                     return post
-                })
+                }).catch(handleError)
         },
     },
 
@@ -48,7 +51,7 @@ export const postResolvers = {
             return db.sequelize.transaction((t: Transaction) => {
                 return db.Post
                     .create(input, {transaction: t})
-            })
+            }).catch(handleError)
         },
 
         updatePost: (parent, {id, input}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
@@ -60,7 +63,7 @@ export const postResolvers = {
                         if (!post) throw new Error(`Post whit id ${id} not found.`)
                         return post.update(input, {transaction: t})
                     })
-            })
+            }).catch(handleError)
         },
 
         deletePost: (parent, {id}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
@@ -73,7 +76,7 @@ export const postResolvers = {
                         return post.destroy({transaction: t})
                             .then(post => !!post)
                     })
-            })
+            }).catch(handleError)
         },
     }
 

@@ -22,6 +22,7 @@ class App {
 
             (req, res, next) => {
                 req['context'].db = db;
+
                 next();
             },
 

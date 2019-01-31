@@ -5,6 +5,6 @@ export interface ResolverContext {
 
     db?: DBConnection;
     authorization?: string;
-    user?: AuthUser;
+    authUser?: AuthUser;
 
 }

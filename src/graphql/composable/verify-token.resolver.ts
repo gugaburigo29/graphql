@@ -4,7 +4,7 @@ import {ResolverContext} from "../../interfaces/ResolverContextInterface";
 import {GraphQLFieldResolver} from "graphql";
 import {JWT_SECRET} from "../../utils";
 
-export const veirfyTokenResolver: ComposableResolver<any, ResolverContext> =
+export const verifyTokenReolver: ComposableResolver<any, ResolverContext> =
     (resolver: GraphQLFieldResolver<any, ResolverContext>): GraphQLFieldResolver<any, ResolverContext> => {
         return (parent, args, context: ResolverContext, info) => {
 

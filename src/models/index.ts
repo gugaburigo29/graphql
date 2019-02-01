@@ -21,7 +21,9 @@ if (!db) {
             host: config.host,
             dialect: config.dialect,
             logging: false,
-            operatorsAliases: false
+            operatorsAliases: {
+                $in: Sequelize.Op.in
+            }
         }
     );
 

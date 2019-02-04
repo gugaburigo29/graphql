@@ -7,43 +7,48 @@ import {compose} from "../../composable/composable.resolver";
 import {authResolvers} from "../../composable/auth.resolver";
 import {AuthUser} from "../../../interfaces/AuthUserInterface";
 import {DataLoaders} from "../../../interfaces/DataLoadersInterface";
+import {ResolverContext} from "../../../interfaces/ResolverContextInterface";
 
 export const postResolvers = {
 
     Post: {
 
-        author: (post: PostInstance, args, {db, dataloaders : {userLoader}}: { db: DBConnection, dataloaders: DataLoaders }, info: GraphQLResolveInfo) => {
+        author: (post: PostInstance, args, {db, dataloaders: {userLoader}}: { db: DBConnection, dataloaders: DataLoaders }, info: GraphQLResolveInfo) => {
             return userLoader
                 .load(post.get('author'))
                 .catch(handleError)
         },
 
-        comments: (post: PostInstance, {first = 10, offset = 0}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
-            return db.Comment
+        comments: (post: PostInstance, {first = 10, offset = 0}, context: ResolverContext, info: GraphQLResolveInfo) => {
+            return context.db.Comment
                 .findAll({
                     where: {post: post.get('id')},
                     limit: first,
-                    offset: offset
+                    offset: offset,
+                    attributes: context.requestedFields.getFields(info)
                 }).catch(handleError)
         },
 
     },
 
     Query: {
-        posts: (parent, {first = 10, offset = 0}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
-            return db.Post
+        posts: (parent, {first = 10, offset = 0}, context: ResolverContext, info: GraphQLResolveInfo) => {
+            return context.db.Post
                 .findAll({
                     limit: first,
-                    offset: offset
+                    offset: offset,
+                    attributes: context.requestedFields.getFields(info, {keep: ['id'], exclude: ['comments']})
                 }).catch(handleError)
         },
 
-        post: (parent, {id}, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
-            id = parseInt(id)
-            return db.Post
-                .findById(id)
+        post: (parent, {id}, context: ResolverContext, info: GraphQLResolveInfo) => {
+            id = parseInt(id);
+            return context.db.Post
+                .findById(id, {
+                    attributes: context.requestedFields.getFields(info, {keep: ['id'], exclude: ['comments']})
+                })
                 .then((post: PostInstance) => {
-                    throwError(!post, `Post whit id ${id} not found.`)
+                    throwError(!post, `Post whit id ${id} not found.`);
                     return post
                 }).catch(handleError)
         },
@@ -65,8 +70,8 @@ export const postResolvers = {
                 return db.Post
                     .findById(id)
                     .then((post: PostInstance) => {
-                        throwError(!post, `Post whit id ${id} not found.`)
-                        throwError(post.get('author') !== authUser.id, `Unauthorized. You can only edit posts by yourself.`)
+                        throwError(!post, `Post whit id ${id} not found.`);
+                        throwError(post.get('author') !== authUser.id, `Unauthorized. You can only edit posts by yourself.`);
                         input.author = authUser.id;
                         return post.update(input, {transaction: t})
                     })
@@ -79,9 +84,9 @@ export const postResolvers = {
                 return db.Post
                     .findById(id)
                     .then((post: PostInstance) => {
-                        if (!post) throw new Error(`Post whit id ${id} not found.`)
-                        throwError(!post, `Post whit id ${id} not found.`)
-                        throwError(post.get('author') !== authUser.id, `Unauthorized. You can only delete posts by yourself.`)
+                        if (!post) throw new Error(`Post whit id ${id} not found.`);
+                        throwError(!post, `Post whit id ${id} not found.`);
+                        throwError(post.get('author') !== authUser.id, `Unauthorized. You can only delete posts by yourself.`);
                         return post.destroy({transaction: t})
                             .then(post => !!post)
                     })
@@ -89,4 +94,4 @@ export const postResolvers = {
         }),
     }
 
-}
+};

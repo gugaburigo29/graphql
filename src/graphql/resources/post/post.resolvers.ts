@@ -6,14 +6,15 @@ import {handleError, throwError} from "../../../utils";
 import {compose} from "../../composable/composable.resolver";
 import {authResolvers} from "../../composable/auth.resolver";
 import {AuthUser} from "../../../interfaces/AuthUserInterface";
+import {DataLoaders} from "../../../interfaces/DataLoadersInterface";
 
 export const postResolvers = {
 
     Post: {
 
-        author: (post: PostInstance, args, {db}: { db: DBConnection }, info: GraphQLResolveInfo) => {
-            return db.User
-                .findById(post.get('author'))
+        author: (post: PostInstance, args, {db, dataloaders : {userLoader}}: { db: DBConnection, dataloaders: DataLoaders }, info: GraphQLResolveInfo) => {
+            return userLoader
+                .load(post.get('author'))
                 .catch(handleError)
         },
 

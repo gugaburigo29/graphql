@@ -1,24 +1,24 @@
-import * as Sequelize from "sequelize";
-import {BaseModelInterface} from "../interfaces/BaseModelInterface";
-import {ModelsInterface} from "../interfaces/ModelsInterface";
+import * as Sequelize from 'sequelize';
+
+import { BaseModelInterface } from '../interfaces/BaseModelInterface';
+import { ModelsInterface } from '../interfaces/ModelsInterface';
 
 export interface PostAttributes {
     id?: number;
     title?: string;
     content?: string;
     photo?: string;
-    author?: string;
+    author?: number;
     createdAt?: string;
-    deletedAt?: string;
+    updatedAt?: string;
 }
 
-export interface PostInstance extends Sequelize.Instance<PostAttributes> {
-}
+export interface PostInstance extends Sequelize.Instance<PostAttributes> {}
 
-export interface PostModel extends BaseModelInterface, Sequelize.Model<PostInstance, PostAttributes> {
-}
+export interface PostModel extends BaseModelInterface, Sequelize.Model<PostInstance, PostAttributes> {}
 
 export default (sequelize: Sequelize.Sequelize, DataTypes: Sequelize.DataTypes): PostModel => {
+
     const Post: PostModel = sequelize.define('Post', {
         id: {
             type: DataTypes.INTEGER,
@@ -51,8 +51,9 @@ export default (sequelize: Sequelize.Sequelize, DataTypes: Sequelize.DataTypes):
                 field: 'author',
                 name: 'author'
             }
-        })
+        });
     };
 
     return Post;
-}
+
+};

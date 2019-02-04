@@ -9,7 +9,7 @@
   "test": {
     "username": "root",
     "password": "",
-    "database": "conteudo_veiculos",
+    "database": "graphql_blog_test",
     "host": "localhost:3306",
     "dialect": "mysql"
   },

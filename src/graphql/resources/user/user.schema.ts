@@ -8,7 +8,7 @@ const userTypes = `
         email: String!
         createdAt: String!
         updatedAt: String!
-        posts(first: Int, offset: Int):[Post!]
+        posts(first: Int, offset: Int): [ Post! ]!
     }
     
     input UserCreateInput {

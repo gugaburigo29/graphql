@@ -7,6 +7,7 @@ export interface UserAttributes {
     name?: string;
     email?: string;
     photo?: string;
+    password?: string;
     createdAt?: string;
     updatedAt?: string;
 }

@@ -17,20 +17,15 @@ if (!db) {
     const sequelize: Sequelize.Sequelize = new Sequelize(
         config.database,
         config.username,
-        config.password, {
-            host: config.host,
-            dialect: config.dialect,
-            logging: false,
-            operatorsAliases: {
-                $in: Sequelize.Op.in
-            }
-        }
+        config.password,
+        config
     );
 
     fs
         .readdirSync(__dirname)
         .filter((file: string) => {
-            return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js')
+            const fileSlice: string = file.slice(-3);
+            return (file.indexOf('.') !== 0) && (file !== basename) && ((fileSlice === '.js') || (fileSlice === '.ts'))
         })
         .forEach((file: string) => {
             const model = sequelize.import(path.join(__dirname, file));

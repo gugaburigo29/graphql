@@ -196,7 +196,7 @@ describe('User', () => {
 
         })
 
-    })
+    });
 
     describe('Mutations', () => {
 
@@ -241,7 +241,7 @@ describe('User', () => {
                         }).catch(handleError)
                 });
 
-            })
+            });
 
             describe('updateUser', () => {
 
@@ -280,6 +280,72 @@ describe('User', () => {
                             expect(updatedUser.email).to.equal('peter@guardians.com');
                             expect(updatedUser.photo).to.not.be.null;
                             expect(updatedUser.id).to.be.undefined;
+
+                        }).catch(handleError)
+                });
+
+                it('should block operation if token is invalid', () => {
+
+                    const body = {
+                        query: `
+                            mutation updateExistingUser($input: UserUpdateInput!){
+                                updateUser(input: $input){
+                                    name
+                                    email
+                                    photo
+                                }
+                            }
+                        `,
+                        variables: {
+                            input: {
+                                name: 'Star Lord',
+                                email: 'peter@guardians.com',
+                                photo: 'photo'
+                            }
+                        }
+                    };
+
+                    return chai.request(app)
+                        .post('/graphql')
+                        .set('content-type', 'application/json')
+                        .set('authorization', `Bearer testeinvalid`)
+                        .send(JSON.stringify(body))
+                        .then(res => {
+
+                            expect(res.body.data.updateUser).to.be.null;
+                            expect(res.body).to.have.keys(['data', 'errors']);
+                            expect(res.body.errors).to.be.an('array');
+                            expect(res.body.errors[0].message).to.equal('JsonWebTokenError: jwt malformed');
+
+                        }).catch(handleError)
+                });
+            });
+
+            describe('updateUserPassword', () => {
+
+                it('should update the password of an existing User', () => {
+
+                    const body = {
+                        query: `
+                            mutation updateUserPassword($input: UserUpdatePasswordInput!){
+                                updateUserPassword(input: $input)
+                            }
+                        `,
+                        variables: {
+                            input: {
+                                password: 'teste123'
+                            }
+                        }
+                    };
+
+                    return chai.request(app)
+                        .post('/graphql')
+                        .set('content-type', 'application/json')
+                        .send(JSON.stringify(body))
+                        .set('authorization', `Bearer ${token}`)
+                        .then(res => {
+
+                            expect(res.body.data.updateUserPassword).to.be.true;
 
                         }).catch(handleError)
                 });

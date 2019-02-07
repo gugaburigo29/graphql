@@ -352,6 +352,32 @@ describe('User', () => {
 
             })
 
+            describe('deleteUser', () => {
+
+                it('should delete an existing User', () => {
+
+                    const body = {
+                        query: `
+                            mutation {
+                                deleteUser
+                            }
+                        `
+                    };
+
+                    return chai.request(app)
+                        .post('/graphql')
+                        .set('content-type', 'application/json')
+                        .send(JSON.stringify(body))
+                        .set('authorization', `Bearer ${token}`)
+                        .then(res => {
+
+                            expect(res.body.data.deleteUser).to.be.true;
+
+                        }).catch(handleError)
+                });
+
+            })
+
         })
 
     })

@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clusters": "SET \"NODE_ENV=development\" & SET \"port=8080\" & node dist/clusters",
+    "build": "npm run gulp build",
+    "start": "npm run build & npm run clusters",
     "gulp": "gulp",
     "dev": "SET \"NODE_ENV=development\" && SET \"JWT_SECRET=teste\" && nodemon --delay 5 dist/index",
     "test": "SET \"NODE_ENV=test\" && SET \"JWT_SECRET=teste\" && mocha"
